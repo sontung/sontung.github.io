@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<!-- <meta name="viewport" content="width=device-width, initial-scale=2.0, user-scalable=yes"> -->
+<!-- <link type="text/css" href="webgl-tutorials.css" rel="stylesheet" /> -->
+<title>WebGL - Scene Graph - DOG</title>
+</head>
+<body>
+<div class="description">
+A dog hierarchy using a scene graph
+</div>
+<canvas id="canvas" width="512"" height="512">
+Oops ... your browser doesn't support the HTML5 canvas element
+</canvas>
+</body>
+<button id = "ButtonX">Start/Stop Animation</button>
+
+<!-- vertex shader -->
+<script id="3d-vertex-shader" type="x-shader/x-vertex">
+attribute vec4 a_position;
+attribute vec4 a_color;
+attribute  vec2 vTexCoord;
+
+uniform mat4 u_matrix;
+
+varying vec4 f_color;
+varying vec2 fTexCoord;
+
+void main() {
+  // Multiply the position by the matrix.
+  gl_Position = u_matrix * a_position;
+
+  // Pass the color to the fragment shader.
+  f_color = a_color;
+  fTexCoord = vTexCoord;
+}
+</script>
+<!-- fragment shader -->
+<script id="3d-fragment-shader" type="x-shader/x-fragment">
+precision mediump float;
+
+// Passed in from the vertex shader.
+varying vec4 f_color;
+
+uniform vec4 u_colorMult;
+uniform vec4 u_colorOffset;
+
+varying  vec2 fTexCoord;
+uniform sampler2D Tex0;
+uniform sampler2D Tex1;
+
+void main() {
+   gl_FragColor = f_color * u_colorMult + u_colorOffset;
+   gl_FragColor = gl_FragColor*(texture2D(Tex0, fTexCoord)*texture2D(Tex1, fTexCoord));
+}
+</script>
+<script src="Common/webgl-utils2.js"></script>
+<script src="Homework2.js"></script>
