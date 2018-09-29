@@ -436,12 +436,15 @@ function copy(src, dst) {
 //
 // END HELPER FUNCTIONS
 //
+
+// To encode translation rotation and scale inside a node
 var TRS = function() {
   this.translation = [0, 0, 0];
   this.rotation = [0, 0, 0];
   this.scale = [1, 1, 1];
 };
 
+// To calculate the target matrix
 TRS.prototype.getMatrix = function(dst) {
   dst = dst || new Float32Array(16);
   var t = this.translation;
@@ -455,6 +458,7 @@ TRS.prototype.getMatrix = function(dst) {
   return dst;
 };
 
+// To encode a node in scene graph
 var Node = function(source) {
   this.children = [];
   this.localMatrix = identity();
@@ -462,6 +466,7 @@ var Node = function(source) {
   this.source = source;
 };
 
+// To make a node childrent of another node
 Node.prototype.setParent = function(parent) {
   // remove us from our parent
   if (this.parent) {
@@ -478,8 +483,8 @@ Node.prototype.setParent = function(parent) {
   this.parent = parent;
 };
 
+// To calculate world matrix
 Node.prototype.updateWorldMatrix = function(parentWorldMatrix) {
-
   var source = this.source;
   if (source) {
     source.getMatrix(this.localMatrix);
@@ -499,8 +504,6 @@ Node.prototype.updateWorldMatrix = function(parentWorldMatrix) {
     child.updateWorldMatrix(worldMatrix);
   });
 };
-
-
 
 function main() {
   // Get A WebGL context
@@ -692,23 +695,6 @@ function main() {
     gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
   };
 
-  function quad() {
-    var i;
-    for (i = 0; i < 6; i++) {
-       texCoordsArray.push(texCoord[0]);
-
-       texCoordsArray.push(texCoord[1]);
-
-       texCoordsArray.push(texCoord[2]);
-
-       texCoordsArray.push(texCoord[0]);
-
-       texCoordsArray.push(texCoord[2]);
-
-       texCoordsArray.push(texCoord[3]);
-    }
-  };
-
   var cameraAngleRadians = degToRad(0);
   var fieldOfViewRadians = degToRad(60);
   var cameraHeight = 50;
@@ -742,15 +728,15 @@ function main() {
   // Create a checkerboard pattern
   for ( var i = 0; i < texSize; i++ ) {
       for ( var j = 0; j <texSize; j++ ) {
-          image2[4*i*texSize+4*j] = 127+127*Math.sin(0.1*i*j);
-          image2[4*i*texSize+4*j+1] = 127+127*Math.sin(0.1*i*j);
-          image2[4*i*texSize+4*j+2] = 127+127*Math.sin(0.1*i*j);
+          image2[4*i*texSize+4*j] = 127+127*(-0.1*i*j);
+          image2[4*i*texSize+4*j+1] = 127+127*(-0.1*i*j);;
+          image2[4*i*texSize+4*j+2] = 127+127*(-0.1*i*j);;
           image2[4*i*texSize+4*j+3] = 255;
       }
   }
 
   // Let's make all the nodes
-  var blockGuyNodeDescriptions =
+  var dogHieModel =
   {
     name: "point between feet",
     draw: false,
@@ -828,7 +814,7 @@ function main() {
     return nodeDescriptions ? nodeDescriptions.map(makeNode) : [];
   };
 
-  var scene = makeNode(blockGuyNodeDescriptions);
+  var scene = makeNode(dogHieModel);
 
   var texCoordsArray = new Float32Array([0, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0]);
   var tBuffer = gl.createBuffer();
@@ -853,16 +839,23 @@ function main() {
   var sign2 = 1;
   var sign3 = -1;
   var sign4 = -1;
+  var sign5 = 1;
+  var sign6 = -1;
   var max_val;
   var index;
-  var ifAnimated = false;
+  var ifAnimated = false;  // stop animation  
   document.getElementById("ButtonX").onclick = function() {ifAnimated = !ifAnimated;};
+  document.getElementById("ButtonY").onclick = function() {
+    sign5 = -sign5;
+    sign6 = -sign6;
+    nodeInfosByName["foot1"].trs.rotation[2] = 0.0;
+    nodeInfosByName["foot2"].trs.rotation[2] = 0.0;
+    nodeInfosByName["foot3"].trs.rotation[2] = 0.0;
+    nodeInfosByName["foot4"].trs.rotation[2] = 0.0;
+  };
 
   // Draw the scene.
   function render(time) {
-    var time_raw = time;
-    time *= 0.001;
-
     webglUtils.resizeCanvasToDisplaySize(gl.canvas);
 
     // Tell WebGL how to convert from clip space to pixels
@@ -894,6 +887,7 @@ function main() {
     // Update all world matrices in the scene graph
     scene.updateWorldMatrix();
 
+    // Do some scaling
     nodeInfosByName["body"].trs.scale =  [5, 3, 1];
     nodeInfosByName["head"].trs.scale =  [1.5, 1.5, 1];
     nodeInfosByName["foot1"].trs.scale =  [0.75, 1.5, 0.75];
@@ -907,17 +901,13 @@ function main() {
     nodeInfosByName["tail"].trs.scale =  [0.75, 3, 0.75];
     nodeInfosByName["tail"].trs.rotation[2] =  1;
 
+    // Movement
     if (ifAnimated) {
-      var speed = 0.01;
-      var c = time * speed;
-
       if (nodeInfosByName["body_p"].trs.translation[0] >= 20) {
         nodeInfosByName["body_p"].trs.translation[0] = -20;
       }
 
-      nodeInfosByName["body_p"].trs.translation[0] += c;
-
-      console.log(nodeInfosByName["body_p"].trs.translation[0]);
+      nodeInfosByName["body_p"].trs.translation[0] += 0.1;
 
       max_val = 0.2;
       index = 1;
@@ -940,27 +930,35 @@ function main() {
       max_val = 0.2;
       if (nodeInfosByName["foot1"].trs.rotation[2] >= max_val) {
         sign2 = -1;
+        nodeInfosByName["foot1"].trs.rotation[2] += sign2*0.01;
       } else if (nodeInfosByName["foot1"].trs.rotation[2] <= - max_val) {
         sign2 = 1;
+        nodeInfosByName["foot1"].trs.rotation[2] += sign2*0.01;
+      } else {
+        nodeInfosByName["foot1"].trs.rotation[2] += sign2*0.01;
       }
-      nodeInfosByName["foot1"].trs.rotation[2] += sign2*0.01;
-
 
       max_val = 0.2;
       if (nodeInfosByName["foot2"].trs.rotation[2] >= max_val) {
-        sign2 = -1;
+        sign5 = -1; // 2
+        nodeInfosByName["foot2"].trs.rotation[2] += sign5*0.01;
       } else if (nodeInfosByName["foot2"].trs.rotation[2] <= - max_val) {
-        sign2 = 1;
+        sign5 = 1;
+        nodeInfosByName["foot2"].trs.rotation[2] += sign5*0.01;
+      } else {
+        nodeInfosByName["foot2"].trs.rotation[2] += sign5*0.01;
       }
-      nodeInfosByName["foot2"].trs.rotation[2] += sign2*0.01;
 
       max_val = 0.2;
       if (nodeInfosByName["foot3"].trs.rotation[2] >= max_val) {
-        sign3 = -1;
+        sign6 = -1; // 3
+        nodeInfosByName["foot3"].trs.rotation[2] += sign6*0.01;
       } else if (nodeInfosByName["foot3"].trs.rotation[2] <= - max_val) {
-        sign3 = 1;
+        sign6 = 1;
+        nodeInfosByName["foot3"].trs.rotation[2] += sign6*0.01;
+      } else {
+        nodeInfosByName["foot3"].trs.rotation[2] += sign6*0.01;
       }
-      nodeInfosByName["foot3"].trs.rotation[2] += sign3*0.01;
 
       max_val = 0.2;
       if (nodeInfosByName["foot4"].trs.rotation[2] >= max_val) {
