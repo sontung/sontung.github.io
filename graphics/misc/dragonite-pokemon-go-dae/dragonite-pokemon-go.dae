@@ -2,8 +2,8 @@
 <COLLADA xmlns="http://www.collada.org/2005/11/COLLADASchema" version="1.4.1">
   <asset><contributor><author></author><authoring_tool>FBX COLLADA exporter</authoring_tool><comments></comments></contributor><created>2018-10-02T18:29:54Z</created><keywords></keywords><modified>2018-10-02T18:29:54Z</modified><revision></revision><subject></subject><title></title><unit meter="1.000000" name="centimeter"></unit><up_axis>Y_UP</up_axis></asset>
   <library_images>
-    <image id="kairyu_0_1.tga-image" name="kairyu_0_1.tga"><init_from>file:///tmp/75a68f15-30b3-45ee-b7fb-c8d53a302bd7/8362c4f57e3cc264d75ae1fe61a70af6/kairyu_0_1.tga</init_from></image>
-    <image id="kairyu_0_0.tga-image" name="kairyu_0_0.tga"><init_from>file:///tmp/75a68f15-30b3-45ee-b7fb-c8d53a302bd7/54269f07f3ab279f32b3acf6d9fa28ca/kairyu_0_0.tga</init_from></image>
+    <image id="kairyu_0_1.tga-image" name="kairyu_0_1.tga"><init_from>https://github.com/sontung/sontung.github.io/blob/master/graphics/misc/dragonite-pokemon-go-dae/kairyu-0-1.tga?raw=true</init_from></image>
+    <image id="kairyu_0_0.tga-image" name="kairyu_0_0.tga"><init_from>https://github.com/sontung/sontung.github.io/blob/master/graphics/misc/dragonite-pokemon-go-dae/kairyu-0-0.tga?raw=true</init_from></image>
   </library_images>
   <library_materials>
     <material id="mat_1_ncl1_1" name="mat_1_ncl1_1">
