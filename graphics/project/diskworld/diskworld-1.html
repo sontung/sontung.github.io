@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<head>
+<meta charset="UTF-8">
+<title>Three.js Diskworld 1</title>
+<style>
+</style>
+<script src="../three.min.js"></script>
+<script src="main.js"></script>
+</head>
+<body onload="init()">
+
+<h2>Diskworld #1: Hierarchical Modeling in Three.js</h2>
+
+<p><b>Use Arrow, PageUp, PageDown, and Home keys to rotate the model.</b></p>
+
+<p><label><input type="checkbox" id="animate">Animate</label>
+   <label style="margin-left: 80px"><input type="radio" id="axle" name="model">Show Axle</label>
+   <label style="margin-left: 20px"><input type="radio" id="car" name="model">Show Car</label>
+   <label style="margin-left: 20px"><input type="radio" id="diskworld" name="model">Show Diskworld</label>
+</p>
+
+<div id="canvas-holder">
+<canvas id="glcanvas" width="600" height="600"></canvas>
+</div>
+
+</body>
+</html>
