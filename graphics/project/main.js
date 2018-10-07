@@ -6,10 +6,6 @@
 
 var canvas, scene, renderer, camera;
 
-var PLANE = null;
-
-var currentObject;  // Currently installed object;
-
 var animating = false;
 
 var mixer = null;  // The object that animates the model, of type THREE.AnimationMixer
@@ -17,12 +13,14 @@ var MIXER_LIST = [];
 var OBJECT_LIST = [];
 var TRANSLATING_OBJECTS = [];
 var REMOVING_OBJECT_POSITION;
-
+var ANIMALS = [];
+var SPOT_LIGHT;
 var prevMixerTime; // Used to record time of last update of mixer
 
 var DISK_WORLD_MODEL;
 var SUN;
 var THETA_SUN = 0;
+var LIGHT_SUN;
 
 var controls;  // A TrackballControls object that is used to implement
                // rotation of the scene using the mouse.  (It actually rotates
@@ -34,7 +32,7 @@ var modelDirectory = "https://raw.githubusercontent.com/sontung/sontung.github.i
 
 var modelFileNames = [  // names of the model files
     "horse.js",
-    "stork.js",
+    "stork.js"
 ];
 
 //var modelRotations = [ // rotations to be applied to models.
@@ -44,7 +42,7 @@ var modelFileNames = [  // names of the model files
 
 var modelRotations = [ // rotations to be applied to models.
     [0, Math.PI/2, 0],
-    [0, Math.PI/2, 0],
+    [0, Math.PI/2, 0]
 ];
 
 
@@ -63,11 +61,10 @@ function render() {
 function createWorld() {
     scene = new THREE.Scene();
     camera = new THREE.PerspectiveCamera(35, canvas.width/canvas.height, 0.1, 100);
-    camera.position.z = 30;
-    var light;  // A light shining from the direction of the camera; moves with the camera.
-    SUN = new THREE.DirectionalLight(0xffffff, 0.8);
-    SUN.position.set(0,16,0);
-    scene.add(SUN);
+    camera.position.z = 40;
+    camera.position.y = 40;
+    console.log("Camera pos:", camera.position);
+    // scene.add(new THREE.CameraHelper(camera));
     scene.add(camera);
 
     // Create the main diskworld model.
@@ -77,16 +74,31 @@ function createWorld() {
 		new THREE.MeshLambertMaterial( { color: 0x00CC55 } )
 	);
 	ground.position.y = -0.3; // Puts top of cylinder just below the xz-plane.
+	ground.receiveShadow = true;
 	DISK_WORLD_MODEL.add(ground);
 
-	var geometry = new THREE.BoxGeometry( 30, 0.5, 10 );
-    var material = new THREE.MeshBasicMaterial( {color: 0xDFDFE5} );
-    var road = new THREE.Mesh( geometry, material );
-    road.position.y = -0.3+0.001;
-//    DISK_WORLD_MODEL.add(road);
+	add_tree();
+	scene.add(DISK_WORLD_MODEL);
 
-	add_tree()
-	scene.add(DISK_WORLD_MODEL)
+	var geometry2 = new THREE.SphereGeometry( 1, 50, 50, 0, Math.PI * 2, 0, Math.PI * 2 );
+    var material2 = new THREE.MeshBasicMaterial( {color: 0xFFFF00} );
+    SUN = new THREE.Mesh( geometry2, material2 );
+    SUN.position.set(0, 8, 0);
+    LIGHT_SUN = new THREE.DirectionalLight(0xffffff, 0.8);
+    LIGHT_SUN.shadow.mapSize.x = 512;
+    LIGHT_SUN.shadow.mapSize.y = 1024;
+    LIGHT_SUN.castShadow = true;
+
+    LIGHT_SUN.shadow.camera = new THREE.OrthographicCamera( -16, 16, 16, -16, 1, 100 );
+
+    console.log("light pos", LIGHT_SUN.position);
+    console.log("cam pos", LIGHT_SUN.shadow.camera.position, LIGHT_SUN.shadow.mapSize);
+    console.log(LIGHT_SUN.shadow.camera);
+    scene.add(new THREE.CameraHelper(LIGHT_SUN.shadow.camera));
+
+    SUN.add(LIGHT_SUN);
+    DISK_WORLD_MODEL.add(SUN);
+    console.log("Shadow map", LIGHT_SUN.shadow.map);
 }
 
 function add_tree() {
@@ -106,6 +118,10 @@ function add_tree() {
 			shininess: 5
 		})
 	);
+	trunk.castShadow = true;
+	trunk.receiveShadow = true;
+	leaves.castShadow = true;
+	leaves.receiveShadow = true;
 	leaves.position.y = 2;  // move bottom of cone to top of trunk
 	tree.add(trunk);
 	tree.add(leaves);
@@ -114,13 +130,12 @@ function add_tree() {
 
     var start_x = -15.5;
     while (start_x < 15.5) {
-        var constraint = Math.sqrt(15.5**2-start_x**2);
+        var constraint = Math.sqrt(Math.pow(15.5, 2)-Math.pow(start_x, 2));
         var start_z = -constraint;
         while (start_z < constraint) {
             start_z += 1;
-            if (start_x**2 + start_z**2 > 240.25) {continue;}
+            if (Math.pow(start_x, 2) + Math.pow(start_z, 2) > 240.25) {continue;}
             if (start_z >= 5 || start_z <= -5) {
-                console.log(start_x, start_z);
                 tree.position.set(start_x, 0, start_z);
                 var rand = Math.random();
                 tree.scale.set(rand, rand, rand);
@@ -131,7 +146,6 @@ function add_tree() {
         }
         start_x += 1;
     }
-    console.log(DISK_WORLD_MODEL.children.length);
 
 }
 
@@ -147,10 +161,10 @@ function doFrame() {
         var _j = TRANSLATING_OBJECTS.length;
         while (_j--) {
             TRANSLATING_OBJECTS[_j].position.x -= 0.1;
-            if (TRANSLATING_OBJECTS[_j].position.x**2+TRANSLATING_OBJECTS[_j].position.z**2 > 240.25) {
+            if (Math.pow(TRANSLATING_OBJECTS[_j].position.x, 2)+Math.pow(TRANSLATING_OBJECTS[_j].position.z, 2) > 240.25) {
                 DISK_WORLD_MODEL.remove(TRANSLATING_OBJECTS[_j]);
                 var new_pos = TRANSLATING_OBJECTS[_j].position.clone();
-                new_pos.x = -new_pos.x
+                new_pos.x = -new_pos.x;
                 REMOVING_OBJECT_POSITION.push(new_pos);
                 TRANSLATING_OBJECTS.splice(_j, 1);
             }
@@ -162,12 +176,15 @@ function doFrame() {
         }
 
         // update sun position
-        SUN.position.x = 16*Math.cos(THETA_SUN);
-        SUN.position.y = 16*Math.sin(THETA_SUN);
-        THETA_SUN += 0.01;
-        if (THETA_SUN > Math.PI*2) {THETA_SUN=0.0;}
-        console.log(SUN.position);
+        if ( typeof SUN !== 'undefined') {
+            SUN.position.x = 16*Math.cos(THETA_SUN);
+            SUN.position.y = 16*Math.sin(THETA_SUN);
+            THETA_SUN += 0.001;
+            if (THETA_SUN > Math.PI*2) {THETA_SUN=0.0;}
+        }
 
+//        SPOT_LIGHT.position.y -= 0.5;
+//        console.log(SPOT_LIGHT.position);
         prevMixerTime = time;
 	    render();
 		requestAnimationFrame(doFrame);
@@ -192,6 +209,10 @@ function add_tree_at(position_vec) {
 		})
 	);
 	leaves.position.y = 2;  // move bottom of cone to top of trunk
+	trunk.castShadow = true;
+	trunk.receiveShadow = true;
+	leaves.castShadow = true;
+	leaves.receiveShadow = true;
 	tree.add(trunk);
 	tree.add(leaves);
 	tree.position.set(position_vec.x, 0, position_vec.z);
@@ -202,6 +223,21 @@ function add_tree_at(position_vec) {
     TRANSLATING_OBJECTS.push(a_tree);
 }
 
+function add_spot_light() {
+    SPOT_LIGHT = new THREE.SpotLight( 0xffffff );
+    SPOT_LIGHT.position.set( 0, 100, 0 );
+
+    SPOT_LIGHT.castShadow = true;
+
+    SPOT_LIGHT.shadow.mapSize.width = 1024;
+    SPOT_LIGHT.shadow.mapSize.height = 1024;
+
+    SPOT_LIGHT.shadow.camera.near = 500;
+    SPOT_LIGHT.shadow.camera.far = 4000;
+    SPOT_LIGHT.shadow.camera.fov = 30;
+
+    DISK_WORLD_MODEL.add( SPOT_LIGHT );
+}
 
 /**
  * This function will be called when the JSONLoader has
@@ -223,6 +259,8 @@ function modelLoaded(geometry, rotation, centerX, centerY, centerZ) {
         morphTargets: true
     });
     var object = new THREE.Mesh(geometry, material);
+    object.castShadow = true;
+    object.receiveShadow = true;
 
     /* Determine the ranges of x, y, and z in the vertices of the geometry. */
 
@@ -252,11 +290,9 @@ function modelLoaded(geometry, rotation, centerX, centerY, centerZ) {
 //    var centerX = (xmin+xmax)/2;
 //    var centerY = (ymin+ymax)/2;
 //    var centerZ = (zmin+zmax)/2;
-    var max = Math.max(centerX - xmin, xmax - centerX);
-    max = Math.max(max, Math.max(centerY - ymin, ymax - centerY) );
-    max = Math.max(max, Math.max(centerZ - zmin, zmax - centerZ) );
+
     var scale = 0.01;
-    object.position.set( -centerX, centerY, -centerZ );
+    object.position.set(centerX, centerY, centerZ);
     if (window.console) {
        console.log("Loading finished, scaling object by " + scale);
        console.log("Center at ( " + centerX + ", " + centerY + ", " + centerZ + " )");
@@ -266,12 +302,14 @@ function modelLoaded(geometry, rotation, centerX, centerY, centerZ) {
 
     model = new THREE.Object3D();
     model.add(object);
-    model.scale.set(scale,scale,scale);
-    model.rotation.set(rotation[0],rotation[1],rotation[2]);
+    model.scale.set(scale, scale, scale);
+    model.rotation.set(rotation[0], rotation[1], rotation[2]);
+    model.position.set(4.93, 0, 0);
     DISK_WORLD_MODEL.add(model);
     mixer = new THREE.AnimationMixer( object );
     MIXER_LIST.push(mixer);
-    OBJECT_LIST.push(object);
+    OBJECT_LIST.push(model);
+    ANIMALS.push(model);
 	var clip = THREE.AnimationClip.CreateFromMorphTargetSequence( 'motion', geometry.morphTargets, 30 );
     var animationAction = mixer.clipAction(clip);
     animationAction.setDuration(1);
@@ -288,11 +326,11 @@ function modelLoaded(geometry, rotation, centerX, centerY, centerZ) {
  */
 function installModel(modelNumber) {
     function callback(geometry,material) {  // callback function to be executed when loading finishes.
-        if (modelNumber == 0) {
-            modelLoaded(geometry, modelRotations[modelNumber], 0, 0, -100);
+        if (modelNumber === 0) {
+            modelLoaded(geometry, modelRotations[modelNumber], 0, 0, 0);
         }
         else {
-            modelLoaded(geometry, modelRotations[modelNumber], 0, 400, -10);
+            modelLoaded(geometry, modelRotations[modelNumber], 0, 400, 0);
         }
     }
     if (model) {
@@ -347,7 +385,7 @@ function installTrackballControls() {
         document.removeEventListener("mousemove", move, false);
     }
     function touch(event) {
-        if (event.touches.length == 1) {
+        if (event.touches.length === 1) {
             move();
         }
     }
@@ -384,8 +422,8 @@ function pauseAnimation() {
 }
 
 function doAnimationCheckbox() {
-    var anim = document.getElementById("animate").checked
-    if ( anim == animating ) { // should not happen
+    var anim = document.getElementById("animate").checked;
+    if ( anim === animating ) { // should not happen
       return;
     }
     if ( anim )
@@ -412,9 +450,15 @@ function init() {
     document.getElementById("animate").checked = false;
     document.getElementById("animate").onchange = doAnimationCheckbox;
     renderer.setClearColor(0xAAAAAA);
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.BasicShadowMap;
+
+
     createWorld();
     installTrackballControls();
     installModel(0);
-    installModel(1);
+    console.log(renderer);
+    // installModel(1);
+//    add_spot_light();
 }
 
