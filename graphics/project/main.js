@@ -63,7 +63,6 @@ function createWorld() {
     camera = new THREE.PerspectiveCamera(35, canvas.width/canvas.height, 0.1, 100);
     camera.position.z = 40;
     camera.position.y = 40;
-    console.log("Camera pos:", camera.position);
     // scene.add(new THREE.CameraHelper(camera));
     scene.add(camera);
 
@@ -91,14 +90,10 @@ function createWorld() {
 
     LIGHT_SUN.shadow.camera = new THREE.OrthographicCamera( -16, 16, 16, -16, 1, 100 );
 
-    console.log("light pos", LIGHT_SUN.position);
-    console.log("cam pos", LIGHT_SUN.shadow.camera.position, LIGHT_SUN.shadow.mapSize);
-    console.log(LIGHT_SUN.shadow.camera);
     scene.add(new THREE.CameraHelper(LIGHT_SUN.shadow.camera));
 
     SUN.add(LIGHT_SUN);
     DISK_WORLD_MODEL.add(SUN);
-    console.log("Shadow map", LIGHT_SUN.shadow.map);
 }
 
 function add_tree() {
@@ -457,8 +452,7 @@ function init() {
     createWorld();
     installTrackballControls();
     installModel(0);
-    console.log(renderer);
-    // installModel(1);
+    installModel(1);
 //    add_spot_light();
 }
 

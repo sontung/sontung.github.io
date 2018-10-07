@@ -23,12 +23,12 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="js" value="826" />
+          <entry key="js" value="833" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="JavaScript" value="826" />
+          <entry key="JavaScript" value="833" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open" />
@@ -51,8 +51,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/main.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="612">
-              <caret line="183" column="9" lean-forward="true" selection-start-line="177" selection-start-column="18" selection-end-line="183" selection-end-column="9" />
+            <state relative-caret-position="696">
+              <caret line="455" column="7" lean-forward="true" selection-start-line="455" selection-start-column="7" selection-end-line="455" selection-end-column="7" />
               <folding>
                 <element signature="n#!!block;n#add_tree#0" />
                 <element signature="n#!!block;n#add_tree_at#0" />
@@ -74,6 +74,7 @@
   <component name="FindInProjectRecents">
     <findStrings>
       <find>renderer</find>
+      <find>console</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -174,12 +175,12 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1538830612689</updated>
-      <workItem from="1538932020031" duration="10387000" />
+      <workItem from="1538932020031" duration="11237000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="10387000" />
+    <option name="totallyTimeSpent" value="11237000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1431" y="-4" width="1855" height="1084" extended-state="6" />
@@ -225,8 +226,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/main.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="612">
-          <caret line="183" column="9" lean-forward="true" selection-start-line="177" selection-start-column="18" selection-end-line="183" selection-end-column="9" />
+        <state relative-caret-position="696">
+          <caret line="455" column="7" lean-forward="true" selection-start-line="455" selection-start-column="7" selection-end-line="455" selection-end-column="7" />
           <folding>
             <element signature="n#!!block;n#add_tree#0" />
             <element signature="n#!!block;n#add_tree_at#0" />
