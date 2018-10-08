@@ -14,13 +14,32 @@ var OBJECT_LIST = [];
 var TRANSLATING_OBJECTS = [];
 var REMOVING_OBJECT_POSITION;
 var ANIMALS = [];
-var SPOT_LIGHT;
+
 var prevMixerTime; // Used to record time of last update of mixer
 
 var DISK_WORLD_MODEL;
 var SUN;
 var THETA_SUN = 0;
 var LIGHT_SUN;
+var LIGHT_SUN_CAM_HELPER;
+var SPOT_LIGHT;
+var SPOT_LIGHT_CAM_HELPER;
+var SPOT_LIGHT_ADDED = false;
+var CAM_HELPER = false;
+
+var CAM_POSITIONS = {
+    0: [17.6, 2.72, 5.44],
+    1: [-21.13, 19.09, 10.55],
+    2: [0, 40, 40]
+};
+
+var CAM_ROTATIONS = {
+    0: [-0.42, 1.04, 0.09],
+    1: [-0.89, -0.96, -0.95],
+    2: [-0.78, 0, 0]
+};
+
+var CURRENT_CAM_VIEW = 2;
 
 var controls;  // A TrackballControls object that is used to implement
                // rotation of the scene using the mouse.  (It actually rotates
@@ -28,22 +47,21 @@ var controls;  // A TrackballControls object that is used to implement
 
 var model = null; // The three.js object that represents the current model.
 
-var modelDirectory = "https://raw.githubusercontent.com/sontung/sontung.github.io/master/graphics/misc/models-json/"; // Folder containing model files, relative to this HTML file.
+var modelDirectory = "https://raw.githubusercontent.com/sontung/sontung.github.io/master/graphics/misc/models-gltf/"; // Folder containing model files, relative to this HTML file.
 
 var modelFileNames = [  // names of the model files
-    "horse.js",
-    "stork.js"
+    "Horse.glb",
+    "Stork.glb",
+    "Flamingo.glb",
+    "Parrot.glb"
 ];
 
-//var modelRotations = [ // rotations to be applied to models.
-//    [Math.PI/8,Math.PI/2,0],
-//    [Math.PI/8,Math.PI/2,0],
-//];
+var ANIMAL_NUMBERS = [12, 4, 5, 2];
 
-var modelRotations = [ // rotations to be applied to models.
-    [0, Math.PI/2, 0],
-    [0, Math.PI/2, 0]
-];
+var ANIMAL_POSITIONS = {};
+for (var idx=0; idx<modelFileNames.length; idx++) {
+    ANIMAL_POSITIONS[idx] = [];
+}
 
 
 /**
@@ -61,9 +79,10 @@ function render() {
 function createWorld() {
     scene = new THREE.Scene();
     camera = new THREE.PerspectiveCamera(35, canvas.width/canvas.height, 0.1, 100);
-    camera.position.z = 40;
-    camera.position.y = 40;
-    // scene.add(new THREE.CameraHelper(camera));
+    camera.position.set(
+        CAM_POSITIONS[CURRENT_CAM_VIEW][0],
+        CAM_POSITIONS[CURRENT_CAM_VIEW][1],
+        CAM_POSITIONS[CURRENT_CAM_VIEW][2]);
     scene.add(camera);
 
     // Create the main diskworld model.
@@ -89,11 +108,22 @@ function createWorld() {
     LIGHT_SUN.castShadow = true;
 
     LIGHT_SUN.shadow.camera = new THREE.OrthographicCamera( -16, 16, 16, -16, 1, 100 );
-
-    scene.add(new THREE.CameraHelper(LIGHT_SUN.shadow.camera));
+    LIGHT_SUN_CAM_HELPER = new THREE.CameraHelper(LIGHT_SUN.shadow.camera);
 
     SUN.add(LIGHT_SUN);
     DISK_WORLD_MODEL.add(SUN);
+}
+
+function add_spot_light() {
+    SPOT_LIGHT = new THREE.SpotLight( 0xffffff );
+    SPOT_LIGHT.position.set( 0, 10, 0 );
+    SPOT_LIGHT.castShadow = true;
+    SPOT_LIGHT.distance = 30;
+
+    SPOT_LIGHT.shadow.camera.fov = 10;
+    SPOT_LIGHT.shadow.camera.far = 20;
+
+    SPOT_LIGHT_CAM_HELPER = new THREE.SpotLightHelper( SPOT_LIGHT );
 }
 
 function add_tree() {
@@ -146,6 +176,9 @@ function add_tree() {
 
 function doFrame() {
 	if (animating && mixer) {
+
+	    console.log(camera.rotation);
+
         var time = Date.now();
         for (var _j = 0; _j < MIXER_LIST.length; _j++) {
             MIXER_LIST[_j].update( ( time - prevMixerTime ) * 0.001 );
@@ -174,12 +207,12 @@ function doFrame() {
         if ( typeof SUN !== 'undefined') {
             SUN.position.x = 16*Math.cos(THETA_SUN);
             SUN.position.y = 16*Math.sin(THETA_SUN);
-            THETA_SUN += 0.001;
+            THETA_SUN += 0.01;
             if (THETA_SUN > Math.PI*2) {THETA_SUN=0.0;}
         }
 
-//        SPOT_LIGHT.position.y -= 0.5;
-//        console.log(SPOT_LIGHT.position);
+        doSpotLightCheckbox();
+
         prevMixerTime = time;
 	    render();
 		requestAnimationFrame(doFrame);
@@ -218,97 +251,32 @@ function add_tree_at(position_vec) {
     TRANSLATING_OBJECTS.push(a_tree);
 }
 
-function add_spot_light() {
-    SPOT_LIGHT = new THREE.SpotLight( 0xffffff );
-    SPOT_LIGHT.position.set( 0, 100, 0 );
+function modelLoaded(mesh, clip, position) {
 
-    SPOT_LIGHT.castShadow = true;
+    var object = mesh.clone();
 
-    SPOT_LIGHT.shadow.mapSize.width = 1024;
-    SPOT_LIGHT.shadow.mapSize.height = 1024;
-
-    SPOT_LIGHT.shadow.camera.near = 500;
-    SPOT_LIGHT.shadow.camera.far = 4000;
-    SPOT_LIGHT.shadow.camera.fov = 30;
-
-    DISK_WORLD_MODEL.add( SPOT_LIGHT );
-}
-
-/**
- * This function will be called when the JSONLoader has
- * finished loading a model.  This function creates a three.js
- * Mesh object to hold the model.  It translates the object so that
- * its center is at the origin.  It wraps the object in another object
- * that is used to scale and rotate the object.  The scale is set
- * so that the maximum coordinate in its vertices, in absolute
- * value, is scaled to 10.  The rotation is set to the second parameter,
- * which is used to set up an appropriate orientation for viewing
- * the model.
- */
-function modelLoaded(geometry, rotation, centerX, centerY, centerZ) {
-
-    /* create the object from the geometry was loaded, with a white material. */
-
-    var material = new THREE.MeshLambertMaterial( {
-        vertexColors: THREE.FaceColors,  // use colors from the geometry
-        morphTargets: true
-    });
-    var object = new THREE.Mesh(geometry, material);
+    object.material = mesh.material.clone();
     object.castShadow = true;
     object.receiveShadow = true;
 
-    /* Determine the ranges of x, y, and z in the vertices of the geometry. */
-
-    var xmin = Infinity;
-    var xmax = -Infinity;
-    var ymin = Infinity;
-    var ymax = -Infinity;
-    var zmin = Infinity;
-    var zmax = -Infinity;
-    for (var i = 0; i < geometry.vertices.length; i++) {
-        var v = geometry.vertices[i];
-        if (v.x < xmin)
-            xmin = v.x;
-        else if (v.x > xmax)
-            xmax = v.x;
-        if (v.y < ymin)
-            ymin = v.y;
-        else if (v.y > ymax)
-            ymax = v.y;
-        if (v.z < zmin)
-            zmin = v.z;
-        else if (v.z > zmax)
-            zmax = v.z;
-    }
-
-    /* translate the center of the object to the origin */
-//    var centerX = (xmin+xmax)/2;
-//    var centerY = (ymin+ymax)/2;
-//    var centerZ = (zmin+zmax)/2;
-
     var scale = 0.01;
-    object.position.set(centerX, centerY, centerZ);
-    if (window.console) {
-       console.log("Loading finished, scaling object by " + scale);
-       console.log("Center at ( " + centerX + ", " + centerY + ", " + centerZ + " )");
-    }
 
     /* Create the wrapper, model, to scale and rotate the object. */
 
     model = new THREE.Object3D();
     model.add(object);
     model.scale.set(scale, scale, scale);
-    model.rotation.set(rotation[0], rotation[1], rotation[2]);
-    model.position.set(4.93, 0, 0);
+    model.rotation.y = Math.PI/2;
+    model.position.set(position.x, position.y, position.z);
     DISK_WORLD_MODEL.add(model);
+
     mixer = new THREE.AnimationMixer( object );
     MIXER_LIST.push(mixer);
     OBJECT_LIST.push(model);
     ANIMALS.push(model);
-	var clip = THREE.AnimationClip.CreateFromMorphTargetSequence( 'motion', geometry.morphTargets, 30 );
     var animationAction = mixer.clipAction(clip);
-    animationAction.setDuration(1);
-    animationAction.play();  // Note that it is the mixer.update() in doFrame() that actually drives the animation.
+    animationAction.setDuration(getRandomArbitrary(0.5, 1.5));
+    animationAction.play();
     document.getElementById("animate").disabled  = false;
     render();
 }
@@ -319,13 +287,15 @@ function modelLoaded(geometry, rotation, centerX, centerY, centerZ) {
  * starts loading the model from the specified file.  When the model has
  * has been loaded, the function modelLoaded() will be called.
  */
-function installModel(modelNumber) {
-    function callback(geometry,material) {  // callback function to be executed when loading finishes.
-        if (modelNumber === 0) {
-            modelLoaded(geometry, modelRotations[modelNumber], 0, 0, 0);
-        }
-        else {
-            modelLoaded(geometry, modelRotations[modelNumber], 0, 400, 0);
+function installModel(modelNumber, number) {
+
+    function callback(gltf) {  // callback function to be executed when loading finishes.
+        var mesh = gltf.scene.children[ 0 ];
+        var clip = gltf.animations[ 0 ];
+        var a_random_pos;
+        for (var _i=0; _i<number; _i++) {
+            a_random_pos = random_spawning(modelNumber);
+            modelLoaded(mesh, clip, a_random_pos);
         }
     }
     if (model) {
@@ -339,31 +309,46 @@ function installModel(modelNumber) {
        doAnimationCheckbox();
     }
     document.getElementById("animate").disabled = true;
-    var loader = new THREE.JSONLoader();
-    try {
-        loader.load(modelDirectory + modelFileNames[modelNumber], callback);
-    }
-    catch (e) {
-        // Note: Will give an error if loading from the local file system
-        // on some browsers (Chrome, at least).
-        document.getElementById("headline").innerHTML =
-            "Could not load model! Note that some browsers<br>can't load models from a local disk.";
-    }
+
+    var loader = new THREE.GLTFLoader();
+    loader.load(modelDirectory + modelFileNames[modelNumber], callback);
 }
 
+function getRandomArbitrary(min, max) {
+    return Math.random() * (max - min) + min;
+}
 
+function random_spawning(model_number) {
+    var curr_pos;
+    var a_height = (model_number>0)*5 + model_number*0.5;
+    while (1) {
+        var pos_x = getRandomArbitrary(-14.5, 14.5);
+        var constraint1 = Math.sqrt(Math.pow(14.5, 2) - Math.pow(pos_x, 2));
+        var constraint2 = 4;
+        var pos_z = getRandomArbitrary(
+            Math.max(-constraint1, -constraint2),
+            Math.min(constraint1, constraint2));
 
-/*  This page uses THREE.TrackballControls to let the user use the mouse to rotate
- *  the view.  TrackballControls are designed to be used during an animation, where
- *  the rotation is updated as part of preparing for the next frame.  The scene
- *  is not automatically updated just because the user drags the mouse.  To get
- *  the rotation to work without animation, I add another mouse listener to the
- *  canvas, just to call the render() function when the user drags the mouse.
- *  The same thing holds for touch events -- I call render for any mouse move
- *  event with one touch.
- */
+        curr_pos = new THREE.Vector2(pos_x, pos_z);
+
+        if (ANIMAL_POSITIONS[model_number].length === 0) {
+            ANIMAL_POSITIONS[model_number].push(curr_pos);
+            return new THREE.Vector3(pos_x, a_height, pos_z);
+        }
+        var distance = [];
+        for (var _idx=0; _idx<ANIMAL_POSITIONS[model_number].length; _idx++) {
+            distance.push(curr_pos.distanceTo(ANIMAL_POSITIONS[model_number][_idx]));
+        }
+        if (Math.min.apply(null, distance) > 4) {
+            ANIMAL_POSITIONS[model_number].push(curr_pos);
+            break;
+        }
+    }
+    return new THREE.Vector3(pos_x, a_height, pos_z);
+}
+
 function installTrackballControls() {
-    controls = new THREE.TrackballControls(camera,canvas);
+    controls = new THREE.TrackballControls(camera, canvas);
     controls.noPan = true;
     controls.noZoom = true;
     controls.staticMoving = true;
@@ -388,12 +373,24 @@ function installTrackballControls() {
     canvas.addEventListener("touchmove", touch, false);
 }
 
-
 function resetControls() {
     controls.reset();
     if (!animating) {
       render();
     }
+}
+
+function change_cam_view() {
+    CURRENT_CAM_VIEW = (CURRENT_CAM_VIEW+1) % 3;
+    console.log(CURRENT_CAM_VIEW);
+    camera.position.set(
+        CAM_POSITIONS[CURRENT_CAM_VIEW][0],
+        CAM_POSITIONS[CURRENT_CAM_VIEW][1],
+        CAM_POSITIONS[CURRENT_CAM_VIEW][2]);
+    camera.rotation.set(
+        CAM_ROTATIONS[CURRENT_CAM_VIEW][0],
+        CAM_ROTATIONS[CURRENT_CAM_VIEW][1],
+        CAM_ROTATIONS[CURRENT_CAM_VIEW][2]);
 }
 
 
@@ -427,6 +424,34 @@ function doAnimationCheckbox() {
     	pauseAnimation();
 }
 
+function doSpotLightCheckbox() {
+    if (Math.PI < THETA_SUN) {
+        DISK_WORLD_MODEL.add(SPOT_LIGHT);
+        SPOT_LIGHT_ADDED = true;
+        if (CAM_HELPER) {
+            scene.add(SPOT_LIGHT_CAM_HELPER);
+        }
+    } else {
+        DISK_WORLD_MODEL.remove(SPOT_LIGHT);
+        scene.remove(SPOT_LIGHT_CAM_HELPER);
+        SPOT_LIGHT_ADDED = false;
+    }
+}
+
+function doCamHelperCheckbox() {
+    if (!CAM_HELPER) {
+        scene.add(LIGHT_SUN_CAM_HELPER);
+        if (SPOT_LIGHT_ADDED) {
+            scene.add(SPOT_LIGHT_CAM_HELPER);
+        }
+        CAM_HELPER = true;
+    } else {
+        scene.remove(LIGHT_SUN_CAM_HELPER);
+        scene.remove(SPOT_LIGHT_CAM_HELPER);
+        CAM_HELPER = false;
+    }
+}
+
 //----------------------------------------------------------------------------------
 
 function init() {
@@ -442,8 +467,9 @@ function init() {
                 e + "</b></p>";
         return;
     }
-    document.getElementById("animate").checked = false;
     document.getElementById("animate").onchange = doAnimationCheckbox;
+    document.getElementById("camhelper").onchange = doCamHelperCheckbox;
+
     renderer.setClearColor(0xAAAAAA);
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.BasicShadowMap;
@@ -451,8 +477,10 @@ function init() {
 
     createWorld();
     installTrackballControls();
-    installModel(0);
-    installModel(1);
-//    add_spot_light();
+
+    for (var _i=0; _i<modelFileNames.length; _i++) {
+        installModel(_i, ANIMAL_NUMBERS[_i]);
+    }
+    add_spot_light();
 }
 

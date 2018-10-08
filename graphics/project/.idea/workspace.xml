@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d99262f4-6c11-4cb2-a9fe-dc37eafd65e3" name="Default" comment="" />
+    <list default="true" id="d99262f4-6c11-4cb2-a9fe-dc37eafd65e3" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/main.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mesh-animation.html" beforeDir="false" afterPath="$PROJECT_DIR$/mesh-animation.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/three.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/three.min.js" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -22,17 +26,27 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="js" value="833" />
+          <entry key="html" value="108" />
+          <entry key="js" value="3456" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="JavaScript" value="833" />
+          <entry key="HTML" value="108" />
+          <entry key="JavaScript" value="3456" />
         </counts>
       </usages-collector>
-      <usages-collector id="statistics.file.extensions.open" />
+      <usages-collector id="statistics.file.extensions.open">
+        <counts>
+          <entry key="py" value="1" />
+        </counts>
+      </usages-collector>
       <usages-collector id="statistics.js.language.service.starts" />
-      <usages-collector id="statistics.file.types.open" />
+      <usages-collector id="statistics.file.types.open">
+        <counts>
+          <entry key="PLAIN_TEXT" value="1" />
+        </counts>
+      </usages-collector>
       <usages-collector id="statistics.vcs.git.usages" />
     </session>
   </component>
@@ -41,8 +55,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/mesh-animation.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="270">
-              <caret line="15" selection-start-line="15" selection-end-line="15" />
+            <state relative-caret-position="306">
+              <caret line="23" column="58" selection-start-line="23" selection-start-column="58" selection-end-line="23" selection-end-column="58" />
             </state>
           </provider>
         </entry>
@@ -50,19 +64,24 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/main.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1949">
-              <caret line="448" column="51" lean-forward="true" selection-start-line="448" selection-start-column="51" selection-end-line="448" selection-end-column="51" />
+            <state relative-caret-position="401">
+              <caret line="37" column="27" selection-start-line="37" selection-start-column="27" selection-end-line="37" selection-end-column="27" />
               <folding>
+                <element signature="e#3146#3316#0" />
                 <element signature="e#3190#4601#0" />
                 <element signature="e#6106#6959#0" />
-                <element signature="e#6987#7370#0" />
                 <element signature="e#7988#10223#0" />
-                <element signature="e#10481#11676#0" />
+                <element signature="n#!!block;n#installModel#0" />
+                <element signature="n#!!block;n#getRandomArbitrary#0" />
+                <element signature="n#!!block;n#random_spawning#0" />
                 <element signature="e#12309#12948#0" />
                 <element signature="e#12976#13045#0" />
                 <element signature="e#13243#13394#0" />
                 <element signature="e#13422#13470#0" />
                 <element signature="e#13503#13709#0" />
+                <element signature="e#12206#12441#0" />
+                <element signature="e#12300#12573#0" />
+                <element signature="e#13813#14545#0" />
               </folding>
             </state>
           </provider>
@@ -82,6 +101,7 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
+        <option value="$PROJECT_DIR$/mesh-animation.html" />
         <option value="$PROJECT_DIR$/main.js" />
       </list>
     </option>
@@ -164,6 +184,16 @@
       </list>
     </option>
   </component>
+  <component name="RunManager">
+    <configuration name="main.js" type="NodeJSConfigurationType" factoryName="Node.js" temporary="true" nameIsGenerated="true" path-to-js-file="main.js" working-dir="$PROJECT_DIR$">
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Node.js.main.js" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -175,23 +205,23 @@
       <option name="presentableId" value="Default" />
       <updated>1538830612689</updated>
       <workItem from="1538932020031" duration="11237000" />
-      <workItem from="1538985242463" duration="612000" />
+      <workItem from="1538985242463" duration="18414000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="11849000" />
+    <option name="totallyTimeSpent" value="29651000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1430" y="-11" width="1857" height="1092" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.16266376" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.16266376" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.3294979" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -217,28 +247,36 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/test.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
     <entry file="file://$PROJECT_DIR$/mesh-animation.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="15" selection-start-line="15" selection-end-line="15" />
+        <state relative-caret-position="306">
+          <caret line="23" column="58" selection-start-line="23" selection-start-column="58" selection-end-line="23" selection-end-column="58" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/main.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1949">
-          <caret line="448" column="51" lean-forward="true" selection-start-line="448" selection-start-column="51" selection-end-line="448" selection-end-column="51" />
+        <state relative-caret-position="401">
+          <caret line="37" column="27" selection-start-line="37" selection-start-column="27" selection-end-line="37" selection-end-column="27" />
           <folding>
+            <element signature="e#3146#3316#0" />
             <element signature="e#3190#4601#0" />
             <element signature="e#6106#6959#0" />
-            <element signature="e#6987#7370#0" />
             <element signature="e#7988#10223#0" />
-            <element signature="e#10481#11676#0" />
+            <element signature="n#!!block;n#installModel#0" />
+            <element signature="n#!!block;n#getRandomArbitrary#0" />
+            <element signature="n#!!block;n#random_spawning#0" />
             <element signature="e#12309#12948#0" />
             <element signature="e#12976#13045#0" />
             <element signature="e#13243#13394#0" />
             <element signature="e#13422#13470#0" />
             <element signature="e#13503#13709#0" />
+            <element signature="e#12206#12441#0" />
+            <element signature="e#12300#12573#0" />
+            <element signature="e#13813#14545#0" />
           </folding>
         </state>
       </provider>

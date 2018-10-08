@@ -6,6 +6,7 @@
 <link rel="stylesheet" href="demo.css">
 <script src="demo-core.js"></script>
 <script src="three.min.js"></script>
+<script src="GLTFLoader.js"></script>
 <script src="Sky.js"></script>
 <script src="TrackballControls.js"></script>
 <script src="main.js"></script>
@@ -18,7 +19,9 @@
 
 <p>
 <label><input type="checkbox" id="animate">Animate</label>
+<label><input type="checkbox" id="camhelper">Camera Helper</label>
 <button style="margin-left: 40px" onclick="resetControls()">Reset Rotation</button>
+<button style="margin-left: 40px" onclick="change_cam_view()">Change Camera View</button>
 </p>
 
 <div id="canvas-holder">
