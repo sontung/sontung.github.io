@@ -1,9 +1,3 @@
-/* Can show animated models of a horse and of a stork.
-   The basic outline is the same as my sample program
-   json-model-viewer.html, but the animation technique
-   was lifted from the example canvas_morphtargets_horse.html
-   that is part of the three.js download. */
-
 var canvas, scene, renderer, camera;
 
 var animating = false;
@@ -45,9 +39,8 @@ var controls;  // A TrackballControls object that is used to implement
                // rotation of the scene using the mouse.  (It actually rotates
                // the camera around the scene.)
 
-var model = null; // The three.js object that represents the current model.
 
-var modelDirectory = "https://raw.githubusercontent.com/sontung/sontung.github.io/master/graphics/misc/models-gltf/"; // Folder containing model files, relative to this HTML file.
+var modelDirectory = "https://raw.githubusercontent.com/sontung/sontung.github.io/master/graphics/misc/models-gltf/";
 
 var modelFileNames = [  // names of the model files
     "Horse.glb",
@@ -63,19 +56,13 @@ for (var idx=0; idx<modelFileNames.length; idx++) {
     ANIMAL_POSITIONS[idx] = [];
 }
 
+var MOVE_SCENE = false;
+var memoryInfo = window.performance.memory;
 
-/**
- *  The render function draws the scene.
- */
 function render() {
     renderer.render(scene, camera);
+    console.log("animals", ANIMALS.length, "trees", TRANSLATING_OBJECTS.length, "mem used", memoryInfo.usedJsHeapSize);
 }
-
-
-/*  This function is called by the init() method to create the world.  In this program,
- *  it just creates a light and a camera.  The model will be added in modelLoaded,
- *  after the model has been loaded.
- */
 function createWorld() {
     scene = new THREE.Scene();
     camera = new THREE.PerspectiveCamera(35, canvas.width/canvas.height, 0.1, 100);
@@ -177,30 +164,55 @@ function add_tree() {
 function doFrame() {
 	if (animating && mixer) {
 
-	    console.log(camera.rotation);
-
         var time = Date.now();
         for (var _j = 0; _j < MIXER_LIST.length; _j++) {
             MIXER_LIST[_j].update( ( time - prevMixerTime ) * 0.001 );
         }
 
-        // remove out of plane trees
-        REMOVING_OBJECT_POSITION = [];
-        var _j = TRANSLATING_OBJECTS.length;
-        while (_j--) {
-            TRANSLATING_OBJECTS[_j].position.x -= 0.1;
-            if (Math.pow(TRANSLATING_OBJECTS[_j].position.x, 2)+Math.pow(TRANSLATING_OBJECTS[_j].position.z, 2) > 240.25) {
-                DISK_WORLD_MODEL.remove(TRANSLATING_OBJECTS[_j]);
-                var new_pos = TRANSLATING_OBJECTS[_j].position.clone();
-                new_pos.x = -new_pos.x;
-                REMOVING_OBJECT_POSITION.push(new_pos);
-                TRANSLATING_OBJECTS.splice(_j, 1);
+        // tree animation
+        if (MOVE_SCENE) {
+            // remove out of plane trees
+            REMOVING_OBJECT_POSITION = [];
+            _j = TRANSLATING_OBJECTS.length;
+            while (_j--) {
+                TRANSLATING_OBJECTS[_j].position.x -= 0.1;
+                if (Math.pow(TRANSLATING_OBJECTS[_j].position.x, 2) + Math.pow(TRANSLATING_OBJECTS[_j].position.z, 2) > 240.25) {
+                    DISK_WORLD_MODEL.remove(TRANSLATING_OBJECTS[_j]);
+                    var new_pos = TRANSLATING_OBJECTS[_j].position.clone();
+                    new_pos.x = -new_pos.x;
+                    REMOVING_OBJECT_POSITION.push(new_pos);
+                    TRANSLATING_OBJECTS.splice(_j, 1);
+                }
             }
-        }
 
-        // substitute removed trees
-        for (var _i=0; _i<REMOVING_OBJECT_POSITION.length; _i++) {
-            add_tree_at(REMOVING_OBJECT_POSITION[_i]);
+            // substitute removed trees
+            for (var _i = 0; _i < REMOVING_OBJECT_POSITION.length; _i++) {
+                add_tree_at(REMOVING_OBJECT_POSITION[_i]);
+            }
+
+        // animal animation
+        } else {
+            // remove out of plane animals
+            var _z = ANIMALS.length;
+            var removed = 0;
+            while (_z--) {
+                ANIMALS[_z].position.x += 0.1;
+                if (Math.pow(ANIMALS[_z].position.x, 2) + Math.pow(ANIMALS[_z].position.z, 2) > 240.25) {
+                    DISK_WORLD_MODEL.remove(ANIMALS[_z]);
+                    ANIMALS.splice(_z, 1);
+                    removed++;
+                }
+            }
+
+            // substitute random animals
+            for (var _f=0; _f<removed; _f++) {
+                var which_animal = getRandomInt(0, 4);
+                var pos_z = getRandomArbitrary(-4, 4);
+                var pos_y = (which_animal>0)*5 + which_animal*0.5;
+                var pos_x = -Math.sqrt(Math.pow(14.5, 2) - Math.pow(pos_z, 2));
+                installModel(which_animal, 1, new THREE.Vector3(pos_x, pos_y, pos_z));
+            }
+
         }
 
         // update sun position
@@ -263,7 +275,7 @@ function modelLoaded(mesh, clip, position) {
 
     /* Create the wrapper, model, to scale and rotate the object. */
 
-    model = new THREE.Object3D();
+    var model = new THREE.Object3D();
     model.add(object);
     model.scale.set(scale, scale, scale);
     model.rotation.y = Math.PI/2;
@@ -281,34 +293,30 @@ function modelLoaded(mesh, clip, position) {
     render();
 }
 
-
-/**
- * Called when the setting of the model-selection radio buttons is changed.
- * starts loading the model from the specified file.  When the model has
- * has been loaded, the function modelLoaded() will be called.
- */
-function installModel(modelNumber, number) {
+function installModel(modelNumber, number, where=null) {
 
     function callback(gltf) {  // callback function to be executed when loading finishes.
         var mesh = gltf.scene.children[ 0 ];
         var clip = gltf.animations[ 0 ];
         var a_random_pos;
         for (var _i=0; _i<number; _i++) {
-            a_random_pos = random_spawning(modelNumber);
-            modelLoaded(mesh, clip, a_random_pos);
+            if (where === null) {
+                a_random_pos = random_spawning(modelNumber);
+                modelLoaded(mesh, clip, a_random_pos);
+            } else {
+                modelLoaded(mesh, clip, where);
+            }
         }
     }
-    if (model) {
-        scene.remove(model);
-    }
-    controls.reset();  // return camera to original position.
-    mixer = null;  // delete the animator used by current model, if any
-    render();  // draw without model while loading
-    if (animating) { // turn off animation.
-       document.getElementById("animate").checked = false;
-       doAnimationCheckbox();
-    }
-    document.getElementById("animate").disabled = true;
+
+    // controls.reset();  // return camera to original position.
+    // mixer = null;  // delete the animator used by current model, if any
+    // render();  // draw without model while loading
+    // if (animating) { // turn off animation.
+    //    document.getElementById("animate").checked = false;
+    //    doAnimationCheckbox();
+    // }
+    // document.getElementById("animate").disabled = true;
 
     var loader = new THREE.GLTFLoader();
     loader.load(modelDirectory + modelFileNames[modelNumber], callback);
@@ -316,6 +324,12 @@ function installModel(modelNumber, number) {
 
 function getRandomArbitrary(min, max) {
     return Math.random() * (max - min) + min;
+}
+
+function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min)) + min;
 }
 
 function random_spawning(model_number) {
@@ -393,8 +407,9 @@ function change_cam_view() {
         CAM_ROTATIONS[CURRENT_CAM_VIEW][2]);
 }
 
-
-//--------------------------- animation support -----------------------------------
+function change_animation() {
+    MOVE_SCENE = !MOVE_SCENE;
+}
 
 var prevTime;  // For keeping track of time between calls to morphAnimator.update.
 
@@ -451,8 +466,6 @@ function doCamHelperCheckbox() {
         CAM_HELPER = false;
     }
 }
-
-//----------------------------------------------------------------------------------
 
 function init() {
     try {
