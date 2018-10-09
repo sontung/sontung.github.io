@@ -15,14 +15,17 @@
 
 <div id="content">
 
-<h3 id="headline">Three.js Mesh Animation</h3>
-
+<h4 id="1">Animal Racing - Final project for Interactive Graphics by Prof. Marco Schaerf</h4>
+<h4 id="2">Author: Son Tung Nguyen - Sapienza@MARR 2017</h4>
+<h4>Project idea was inspired by the work of <a href="http://math.hws.edu/graphicsbook/index.html">David J. Eck.</a>
+    Animal models were imported from Three.js.</h4>
 <p>
 <label><input type="checkbox" id="animate">Animate</label>
 <label><input type="checkbox" id="camhelper">Camera Helper</label>
 <button style="margin-left: 40px" onclick="resetControls()">Reset Rotation</button>
 <button style="margin-left: 40px" onclick="change_cam_view()">Change Camera View</button>
 <button style="margin-left: 40px" onclick="change_animation()">Change Animation</button>
+<button style="margin-left: 40px" onclick="change_shadow_type()">Change Shadow Type</button>
 
 </p>
 
@@ -35,40 +38,8 @@
 
 
 
-<div id="help-content" style="display:none">
-<h3>About this demo...</h3>
-<p>This mesh-animation demo uses an object of type <i>THREE.AnimationMixer</i> to
-animate models of a running horse and a flying stork.</p>
-
-<p>The models are in
-the JSON format used by <i>three.js</i> and are part of the <i>three.js</i> download (version 89).
-Each of the two model files includes a set of "morph targets." A morph target is
-an alternate set of vertices for the mesh geomety of the model.  The morph targets
-describe the geometry of the model at different points in time.  Those points in time
-are "key frames" for the animation; that is, the geometry for points between the
-key frames is obtained by interpolating the vertex positions from their values
-at the key frames.  A <i>THREE.AnimationMixer</i> is used to apply the interpolation to
-the mesh object.  (This "mixer" works with a <i>THREE.AnimationClip</i> and
-a <i>THREE.AniamtionAction</i> in a rather complex animation system.  See the
-source code.)  The colors for the horse and for the stork are part of the models.</p>
-<p>The techniques for this demo are based on the sample program
-canvas_morphtargets_horse.html, which is part of the download of <i>three.js</i>
-from its web site, threejs.org.  You can look at the source code of this
-demo or of that sample program to see how the animation is programmed.</p>
-<p>You can use your mouse to rotate the model, even when it is animating.</p>
-</div>
-
-
 
 <!-- support for help text -- do not change. -->
-<div id="help-icon">
-<img src="image/question32.png" onclick="showDemoHelp()"
-    title="Click here for information about this demo." width="32" height="32">
-</div>
-<div id="hide-help-icon">
-<img src="image/close32.png" onclick="showDemoHelp()"
-    title="Click here to return to the demo." width="65" height="32">
-</div>
-<div id="helpBG" style="display:none"></div>
+
 </body>
 </html>

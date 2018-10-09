@@ -3,17 +3,16 @@ var canvas, scene, renderer, camera;
 var animating = false;
 
 var mixer = null;  // The object that animates the model, of type THREE.AnimationMixer
-var MIXER_LIST = [];
-var OBJECT_LIST = [];
-var TRANSLATING_OBJECTS = [];
-var REMOVING_OBJECT_POSITION;
+var MIXER_LIST = []; // to animate all the mixers
+var TRANSLATING_OBJECTS = []; // to translate (used when move scene animation)
+var REMOVING_OBJECT_POSITION; // remove out-of-plane objects
 var ANIMALS = [];
 
 var prevMixerTime; // Used to record time of last update of mixer
 
 var DISK_WORLD_MODEL;
 var SUN;
-var THETA_SUN = 0;
+var THETA_SUN = 0; // angle to animate the sun in a circle
 var LIGHT_SUN;
 var LIGHT_SUN_CAM_HELPER;
 var SPOT_LIGHT;
@@ -21,12 +20,14 @@ var SPOT_LIGHT_CAM_HELPER;
 var SPOT_LIGHT_ADDED = false;
 var CAM_HELPER = false;
 
+// various cam position to change
 var CAM_POSITIONS = {
     0: [17.6, 2.72, 5.44],
     1: [-21.13, 19.09, 10.55],
     2: [0, 40, 40]
 };
 
+// various cam rotations to change
 var CAM_ROTATIONS = {
     0: [-0.42, 1.04, 0.09],
     1: [-0.89, -0.96, -0.95],
@@ -49,7 +50,7 @@ var modelFileNames = [  // names of the model files
     "Parrot.glb"
 ];
 
-var ANIMAL_NUMBERS = [12, 4, 5, 2];
+var ANIMAL_NUMBERS = [5, 2, 1, 3]; // how many animals per type
 
 var ANIMAL_POSITIONS = {};
 for (var idx=0; idx<modelFileNames.length; idx++) {
@@ -57,12 +58,20 @@ for (var idx=0; idx<modelFileNames.length; idx++) {
 }
 
 var MOVE_SCENE = false;
-var memoryInfo = window.performance.memory;
+var MEM_INFO = window.performance.memory; // memory usage
+var SHADOW_TYPE_USING = 1;
+var SHADOW_TYPES = [THREE.BasicShadowMap, THREE.PCFShadowMap, THREE.PCFSoftShadowMap];
+var ANIMATION_SPEED = 0.1; // how fast is animation
 
 function render() {
     renderer.render(scene, camera);
-    console.log("animals", ANIMALS.length, "trees", TRANSLATING_OBJECTS.length, "mem used", memoryInfo.usedJsHeapSize);
+    renderer.shadowMap.type = SHADOW_TYPES[SHADOW_TYPE_USING];
+    console.log(
+        "animals", ANIMALS.length, "trees", TRANSLATING_OBJECTS.length,
+        "mem used", MEM_INFO.usedJSHeapSize, "shadow type", SHADOW_TYPE_USING);
 }
+
+// draw the world
 function createWorld() {
     scene = new THREE.Scene();
     camera = new THREE.PerspectiveCamera(35, canvas.width/canvas.height, 0.1, 100);
@@ -101,6 +110,7 @@ function createWorld() {
     DISK_WORLD_MODEL.add(SUN);
 }
 
+// add spot light for night scene
 function add_spot_light() {
     SPOT_LIGHT = new THREE.SpotLight( 0xffffff );
     SPOT_LIGHT.position.set( 0, 10, 0 );
@@ -113,6 +123,7 @@ function add_spot_light() {
     SPOT_LIGHT_CAM_HELPER = new THREE.SpotLightHelper( SPOT_LIGHT );
 }
 
+// add trees
 function add_tree() {
     var tree = new THREE.Object3D();
 	var trunk = new THREE.Mesh(
@@ -161,6 +172,7 @@ function add_tree() {
 
 }
 
+// animate the objects
 function doFrame() {
 	if (animating && mixer) {
 
@@ -175,7 +187,7 @@ function doFrame() {
             REMOVING_OBJECT_POSITION = [];
             _j = TRANSLATING_OBJECTS.length;
             while (_j--) {
-                TRANSLATING_OBJECTS[_j].position.x -= 0.1;
+                TRANSLATING_OBJECTS[_j].position.x -= ANIMATION_SPEED;
                 if (Math.pow(TRANSLATING_OBJECTS[_j].position.x, 2) + Math.pow(TRANSLATING_OBJECTS[_j].position.z, 2) > 240.25) {
                     DISK_WORLD_MODEL.remove(TRANSLATING_OBJECTS[_j]);
                     var new_pos = TRANSLATING_OBJECTS[_j].position.clone();
@@ -196,7 +208,7 @@ function doFrame() {
             var _z = ANIMALS.length;
             var removed = 0;
             while (_z--) {
-                ANIMALS[_z].position.x += 0.1;
+                ANIMALS[_z].position.x += ANIMATION_SPEED - (ANIMALS[_z].speed-0.5)*0.1;
                 if (Math.pow(ANIMALS[_z].position.x, 2) + Math.pow(ANIMALS[_z].position.z, 2) > 240.25) {
                     DISK_WORLD_MODEL.remove(ANIMALS[_z]);
                     ANIMALS.splice(_z, 1);
@@ -219,7 +231,7 @@ function doFrame() {
         if ( typeof SUN !== 'undefined') {
             SUN.position.x = 16*Math.cos(THETA_SUN);
             SUN.position.y = 16*Math.sin(THETA_SUN);
-            THETA_SUN += 0.01;
+            THETA_SUN += ANIMATION_SPEED*0.1;
             if (THETA_SUN > Math.PI*2) {THETA_SUN=0.0;}
         }
 
@@ -231,6 +243,7 @@ function doFrame() {
 	}
 }
 
+// add a tree at a position
 function add_tree_at(position_vec) {
     var tree = new THREE.Object3D();
 	var trunk = new THREE.Mesh(
@@ -263,6 +276,7 @@ function add_tree_at(position_vec) {
     TRANSLATING_OBJECTS.push(a_tree);
 }
 
+// load a animal object
 function modelLoaded(mesh, clip, position) {
 
     var object = mesh.clone();
@@ -284,15 +298,17 @@ function modelLoaded(mesh, clip, position) {
 
     mixer = new THREE.AnimationMixer( object );
     MIXER_LIST.push(mixer);
-    OBJECT_LIST.push(model);
     ANIMALS.push(model);
     var animationAction = mixer.clipAction(clip);
-    animationAction.setDuration(getRandomArbitrary(0.5, 1.5));
+    var speed = getRandomArbitrary(0.5, 1);
+    model.speed = speed;
+    animationAction.setDuration(speed);
     animationAction.play();
     document.getElementById("animate").disabled  = false;
     render();
 }
 
+// install a number of animals
 function installModel(modelNumber, number, where=null) {
 
     function callback(gltf) {  // callback function to be executed when loading finishes.
@@ -309,29 +325,23 @@ function installModel(modelNumber, number, where=null) {
         }
     }
 
-    // controls.reset();  // return camera to original position.
-    // mixer = null;  // delete the animator used by current model, if any
-    // render();  // draw without model while loading
-    // if (animating) { // turn off animation.
-    //    document.getElementById("animate").checked = false;
-    //    doAnimationCheckbox();
-    // }
-    // document.getElementById("animate").disabled = true;
-
     var loader = new THREE.GLTFLoader();
     loader.load(modelDirectory + modelFileNames[modelNumber], callback);
 }
 
+// random float in a range
 function getRandomArbitrary(min, max) {
     return Math.random() * (max - min) + min;
 }
 
+// random int in a range
 function getRandomInt(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min)) + min;
 }
 
+// random position for an animal
 function random_spawning(model_number) {
     var curr_pos;
     var a_height = (model_number>0)*5 + model_number*0.5;
@@ -351,7 +361,7 @@ function random_spawning(model_number) {
         }
         var distance = [];
         for (var _idx=0; _idx<ANIMAL_POSITIONS[model_number].length; _idx++) {
-            distance.push(curr_pos.distanceTo(ANIMAL_POSITIONS[model_number][_idx]));
+            distance.push(curr_pos.manhattanDistanceTo(ANIMAL_POSITIONS[model_number][_idx]));
         }
         if (Math.min.apply(null, distance) > 4) {
             ANIMAL_POSITIONS[model_number].push(curr_pos);
@@ -361,6 +371,7 @@ function random_spawning(model_number) {
     return new THREE.Vector3(pos_x, a_height, pos_z);
 }
 
+// setup trackball control
 function installTrackballControls() {
     controls = new THREE.TrackballControls(camera, canvas);
     controls.noPan = true;
@@ -368,7 +379,8 @@ function installTrackballControls() {
     controls.staticMoving = true;
     function move() {
         controls.update();
-		if (!animating) {
+        // console.log("moving");
+        if (!animating) {
 			render();
 		}
     }
@@ -384,9 +396,11 @@ function installTrackballControls() {
         }
     }
     canvas.addEventListener("mousedown", down, false);
+    canvas.addEventListener("mouseup", up, false);
     canvas.addEventListener("touchmove", touch, false);
 }
 
+// reset to default camera view
 function resetControls() {
     controls.reset();
     if (!animating) {
@@ -396,7 +410,6 @@ function resetControls() {
 
 function change_cam_view() {
     CURRENT_CAM_VIEW = (CURRENT_CAM_VIEW+1) % 3;
-    console.log(CURRENT_CAM_VIEW);
     camera.position.set(
         CAM_POSITIONS[CURRENT_CAM_VIEW][0],
         CAM_POSITIONS[CURRENT_CAM_VIEW][1],
@@ -409,6 +422,10 @@ function change_cam_view() {
 
 function change_animation() {
     MOVE_SCENE = !MOVE_SCENE;
+}
+
+function change_shadow_type() {
+    SHADOW_TYPE_USING = (SHADOW_TYPE_USING+1)%3;
 }
 
 var prevTime;  // For keeping track of time between calls to morphAnimator.update.
@@ -485,7 +502,6 @@ function init() {
 
     renderer.setClearColor(0xAAAAAA);
     renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.BasicShadowMap;
 
 
     createWorld();

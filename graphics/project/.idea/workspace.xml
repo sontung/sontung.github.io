@@ -18,35 +18,36 @@
         <counts>
           <entry key="project.closed" value="3" />
           <entry key="project.open.time.14" value="1" />
+          <entry key="project.open.time.16" value="1" />
           <entry key="project.open.time.22" value="1" />
           <entry key="project.open.time.35" value="1" />
           <entry key="project.open.time.6" value="1" />
           <entry key="project.open.time.9" value="1" />
-          <entry key="project.opened" value="5" />
+          <entry key="project.opened" value="6" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="html" value="123" />
-          <entry key="js" value="4171" />
+          <entry key="html" value="412" />
+          <entry key="js" value="5239" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="HTML" value="123" />
-          <entry key="JavaScript" value="4171" />
+          <entry key="HTML" value="412" />
+          <entry key="JavaScript" value="5239" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
-          <entry key="js" value="2" />
+          <entry key="js" value="3" />
           <entry key="py" value="1" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.js.language.service.starts" />
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="JavaScript" value="2" />
+          <entry key="JavaScript" value="3" />
           <entry key="PLAIN_TEXT" value="1" />
         </counts>
       </usages-collector>
@@ -58,8 +59,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/mesh-animation.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="378">
-              <caret line="21" column="39" selection-start-line="21" selection-end-line="22" />
+            <state relative-caret-position="342">
+              <caret line="19" column="97" selection-start-line="19" selection-start-column="97" selection-end-line="19" selection-end-column="97" />
             </state>
           </provider>
         </entry>
@@ -67,21 +68,24 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/main.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2179">
-              <caret line="498" lean-forward="true" selection-start-line="498" selection-end-line="498" />
+            <state relative-caret-position="2034">
+              <caret line="409" lean-forward="true" selection-start-line="409" selection-end-line="409" />
               <folding>
-                <element signature="e#2114#3524#0" />
-                <element signature="e#3552#3859#0" />
-                <element signature="e#3881#5292#0" />
-                <element signature="e#6781#7634#0" />
-                <element signature="e#7679#8487#0" />
-                <element signature="e#9164#10440#0" />
-                <element signature="e#9712#9761#0" />
-                <element signature="e#10581#10751#0" />
-                <element signature="e#9802#10839#0" />
-                <element signature="e#10877#11517#0" />
-                <element signature="e#11544#11613#0" />
-                <element signature="e#11642#12045#0" />
+                <element signature="e#1629#3039#0" />
+                <element signature="e#3067#3374#0" />
+                <element signature="e#3396#4807#0" />
+                <element signature="e#4828#7302#0" />
+                <element signature="e#7339#8192#0" />
+                <element signature="e#8237#9049#0" />
+                <element signature="e#9106#10123#0" />
+                <element signature="e#10163#10212#0" />
+                <element signature="e#10246#10360#0" />
+                <element signature="e#10401#11438#0" />
+                <element signature="e#11476#12116#0" />
+                <element signature="e#12241#12644#0" />
+                <element signature="e#12674#12707#0" />
+                <element signature="e#12727#12735#0" />
+                <element signature="e#12819#12970#0" />
               </folding>
             </state>
           </provider>
@@ -93,6 +97,8 @@
     <findStrings>
       <find>renderer</find>
       <find>console</find>
+      <find>camera.rotation</find>
+      <find>OBJECT_LIST</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -101,8 +107,8 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/mesh-animation.html" />
         <option value="$PROJECT_DIR$/main.js" />
+        <option value="$PROJECT_DIR$/mesh-animation.html" />
       </list>
     </option>
   </component>
@@ -170,7 +176,7 @@
     <property name="JavaScriptWeakerCompletionTypeGuess" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="settings.editor.selected.configurable" value="Settings.JavaScript" />
+    <property name="settings.editor.selected.configurable" value="configurable.group.tools" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -206,12 +212,13 @@
       <updated>1538830612689</updated>
       <workItem from="1538932020031" duration="11237000" />
       <workItem from="1538985242463" duration="19091000" />
-      <workItem from="1539071886328" duration="5326000" />
+      <workItem from="1539071886328" duration="6084000" />
+      <workItem from="1539088669702" duration="6516000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="35654000" />
+    <option name="totallyTimeSpent" value="42928000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1430" y="-11" width="1857" height="1092" extended-state="6" />
@@ -254,36 +261,44 @@
     <entry file="file://$PROJECT_DIR$/three.min.js">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/main.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2179">
-          <caret line="498" lean-forward="true" selection-start-line="498" selection-end-line="498" />
-          <folding>
-            <element signature="e#2114#3524#0" />
-            <element signature="e#3552#3859#0" />
-            <element signature="e#3881#5292#0" />
-            <element signature="e#6781#7634#0" />
-            <element signature="e#7679#8487#0" />
-            <element signature="e#9164#10440#0" />
-            <element signature="e#9712#9761#0" />
-            <element signature="e#10581#10751#0" />
-            <element signature="e#9802#10839#0" />
-            <element signature="e#10877#11517#0" />
-            <element signature="e#11544#11613#0" />
-            <element signature="e#11642#12045#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/demo-core.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-2195" />
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/TrackballControls.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-719" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2034">
+          <caret line="409" lean-forward="true" selection-start-line="409" selection-end-line="409" />
+          <folding>
+            <element signature="e#1629#3039#0" />
+            <element signature="e#3067#3374#0" />
+            <element signature="e#3396#4807#0" />
+            <element signature="e#4828#7302#0" />
+            <element signature="e#7339#8192#0" />
+            <element signature="e#8237#9049#0" />
+            <element signature="e#9106#10123#0" />
+            <element signature="e#10163#10212#0" />
+            <element signature="e#10246#10360#0" />
+            <element signature="e#10401#11438#0" />
+            <element signature="e#11476#12116#0" />
+            <element signature="e#12241#12644#0" />
+            <element signature="e#12674#12707#0" />
+            <element signature="e#12727#12735#0" />
+            <element signature="e#12819#12970#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/mesh-animation.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="378">
-          <caret line="21" column="39" selection-start-line="21" selection-end-line="22" />
+        <state relative-caret-position="342">
+          <caret line="19" column="97" selection-start-line="19" selection-start-column="97" selection-end-line="19" selection-end-column="97" />
         </state>
       </provider>
     </entry>
