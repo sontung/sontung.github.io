@@ -3,8 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="d99262f4-6c11-4cb2-a9fe-dc37eafd65e3" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/main.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mesh-animation.html" beforeDir="false" afterPath="$PROJECT_DIR$/mesh-animation.html" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -16,25 +14,27 @@
     <session id="-1439524929">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="3" />
+          <entry key="project.closed" value="5" />
           <entry key="project.open.time.14" value="1" />
           <entry key="project.open.time.16" value="1" />
+          <entry key="project.open.time.20" value="1" />
           <entry key="project.open.time.22" value="1" />
+          <entry key="project.open.time.24" value="1" />
           <entry key="project.open.time.35" value="1" />
           <entry key="project.open.time.6" value="1" />
           <entry key="project.open.time.9" value="1" />
-          <entry key="project.opened" value="6" />
+          <entry key="project.opened" value="8" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="html" value="412" />
+          <entry key="html" value="415" />
           <entry key="js" value="5239" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="HTML" value="412" />
+          <entry key="HTML" value="415" />
           <entry key="JavaScript" value="5239" />
         </counts>
       </usages-collector>
@@ -59,8 +59,14 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/mesh-animation.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="342">
-              <caret line="19" column="97" selection-start-line="19" selection-start-column="97" selection-end-line="19" selection-end-column="97" />
+            <state relative-caret-position="119">
+              <caret line="7" column="20" selection-start-line="7" selection-start-column="20" selection-end-line="7" selection-end-column="20" />
+              <folding>
+                <element signature="n#style#0;n#button#0;n#p#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#button#1;n#p#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#button#2;n#p#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#button#3;n#p#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -68,25 +74,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/main.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2034">
-              <caret line="409" lean-forward="true" selection-start-line="409" selection-end-line="409" />
-              <folding>
-                <element signature="e#1629#3039#0" />
-                <element signature="e#3067#3374#0" />
-                <element signature="e#3396#4807#0" />
-                <element signature="e#4828#7302#0" />
-                <element signature="e#7339#8192#0" />
-                <element signature="e#8237#9049#0" />
-                <element signature="e#9106#10123#0" />
-                <element signature="e#10163#10212#0" />
-                <element signature="e#10246#10360#0" />
-                <element signature="e#10401#11438#0" />
-                <element signature="e#11476#12116#0" />
-                <element signature="e#12241#12644#0" />
-                <element signature="e#12674#12707#0" />
-                <element signature="e#12727#12735#0" />
-                <element signature="e#12819#12970#0" />
-              </folding>
+            <state relative-caret-position="7938">
+              <caret line="441" selection-start-line="441" selection-end-line="441" />
             </state>
           </provider>
         </entry>
@@ -194,11 +183,6 @@
     <configuration name="main.js" type="NodeJSConfigurationType" factoryName="Node.js" temporary="true" nameIsGenerated="true" path-to-js-file="main.js" working-dir="$PROJECT_DIR$">
       <method v="2" />
     </configuration>
-    <recent_temporary>
-      <list>
-        <item itemvalue="Node.js.main.js" />
-      </list>
-    </recent_temporary>
   </component>
   <component name="SvnConfiguration">
     <configuration />
@@ -213,18 +197,19 @@
       <workItem from="1538932020031" duration="11237000" />
       <workItem from="1538985242463" duration="19091000" />
       <workItem from="1539071886328" duration="6084000" />
-      <workItem from="1539088669702" duration="6516000" />
+      <workItem from="1539088669702" duration="7381000" />
+      <workItem from="1539182593772" duration="624000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="42928000" />
+    <option name="totallyTimeSpent" value="44417000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1430" y="-11" width="1857" height="1092" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.16266376" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.1643013" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -271,34 +256,23 @@
         <state relative-caret-position="-719" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/main.js">
+    <entry file="file://$PROJECT_DIR$/mesh-animation.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2034">
-          <caret line="409" lean-forward="true" selection-start-line="409" selection-end-line="409" />
+        <state relative-caret-position="119">
+          <caret line="7" column="20" selection-start-line="7" selection-start-column="20" selection-end-line="7" selection-end-column="20" />
           <folding>
-            <element signature="e#1629#3039#0" />
-            <element signature="e#3067#3374#0" />
-            <element signature="e#3396#4807#0" />
-            <element signature="e#4828#7302#0" />
-            <element signature="e#7339#8192#0" />
-            <element signature="e#8237#9049#0" />
-            <element signature="e#9106#10123#0" />
-            <element signature="e#10163#10212#0" />
-            <element signature="e#10246#10360#0" />
-            <element signature="e#10401#11438#0" />
-            <element signature="e#11476#12116#0" />
-            <element signature="e#12241#12644#0" />
-            <element signature="e#12674#12707#0" />
-            <element signature="e#12727#12735#0" />
-            <element signature="e#12819#12970#0" />
+            <element signature="n#style#0;n#button#0;n#p#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#button#1;n#p#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#button#2;n#p#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#button#3;n#p#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/mesh-animation.html">
+    <entry file="file://$PROJECT_DIR$/main.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="342">
-          <caret line="19" column="97" selection-start-line="19" selection-start-column="97" selection-end-line="19" selection-end-column="97" />
+        <state relative-caret-position="7938">
+          <caret line="441" selection-start-line="441" selection-end-line="441" />
         </state>
       </provider>
     </entry>
