@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Three.js Mesh Animation</title>
+    <link rel="stylesheet" href="demo.css">
+    <script src="demo-core.js"></script>
+    <script src="three.min.js"></script>
+    <script src="GLTFLoader.js"></script>
+    <script src="Sky.js"></script>
+    <script src="TrackballControls.js"></script>
+    <script src="test_human_figure.js"></script>
+</head>
+<body onload="init()">
+
+<div id="content">
+
+    <h4 id="1">Animal Racing - Final project for Interactive Graphics by Prof. Marco Schaerf</h4>
+    <h4 id="2">Author: Son Tung Nguyen - Sapienza@MARR 2017</h4>
+    <h4>Project idea was inspired by the work of <a href="http://math.hws.edu/graphicsbook/index.html">David J. Eck.</a>
+        Animal models were imported from Three.js.</h4>
+    <p>
+        <label><input type="checkbox" id="animate">Animate</label>
+        <label><input type="checkbox" id="camhelper">Camera Helper</label>
+        <button style="margin-left: 40px" onclick="resetControls()">Reset Rotation</button>
+        <button style="margin-left: 40px" onclick="change_cam_view()">Change Camera View</button>
+        <button style="margin-left: 40px" onclick="change_animation()">Change Animation</button>
+        <button style="margin-left: 40px" onclick="change_shadow_type()">Change Shadow Type</button>
+
+    </p>
+
+    <div id="canvas-holder">
+        <canvas id="maincanvas" width="1000" height="700"></canvas>
+    </div>
+
+
+</div>
+
+
+
+
+<!-- support for help text -- do not change. -->
+
+</body>
+</html>
