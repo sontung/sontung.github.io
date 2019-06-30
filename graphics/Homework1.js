@@ -113,7 +113,7 @@ function quad(a, b, c, d) {
    var t2 = subtract(vertices[c], vertices[b]);
    var normal = cross(t1, t2);
    var normal = vec3(normal);
-
+   console.log(normal[0], normal[1], normal[2]);
    pointsArray.push(vertices[a]);
    colorsArray.push(vertexColors[a]);
    normalsArray.push(normal);
